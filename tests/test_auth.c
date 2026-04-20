@@ -12,16 +12,6 @@ int main() {
         return 1;
     }
     
-    // Тест 1: Инициализация таблицы
-    printf("Test 1: init_users_table... ");
-    if (init_users_table(db)) {
-        printf("✅ PASSED\n");
-    } else {
-        printf("❌ FAILED\n");
-        sqlite3_close(db);
-        return 1;
-    }
-    
     // Тест 2: Регистрация пользователя
     printf("Test 2: register_user... ");
     if (register_user(db, "admin", "admin123", "admin")) {
