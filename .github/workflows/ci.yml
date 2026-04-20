@@ -24,7 +24,6 @@ jobs:
         mkdir -p data
         rm -f data/test.db
         sqlite3 data/test.db < data/schema.sql
-        echo "✅ Test database created"
     
     - name: Build project
       run: make
@@ -33,11 +32,7 @@ jobs:
       run: make test-auth
     
     - name: Run tests with coverage
-      run: |
-        make clean-coverage
-        gcc -Wall -I./include -fprofile-arcs -ftest-coverage tests/test_auth.c src/auth.c -o bin/test_auth -lsqlite3
-        ./bin/test_auth
-        gcov src/auth.c
+      run: make test-coverage
     
     - name: Generate HTML coverage report
       run: |
@@ -50,9 +45,3 @@ jobs:
       with:
         name: coverage-report
         path: coverage_report/
-    
-    - name: Upload executable
-      uses: actions/upload-artifact@v4
-      with:
-        name: ippodrom-linux
-        path: bin/ippodrom
