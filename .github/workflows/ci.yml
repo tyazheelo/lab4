@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
@@ -20,7 +20,11 @@ jobs:
         sudo apt-get install -y gcc make libsqlite3-dev lcov sqlite3
     
     - name: Initialize database
-      run: make db-init
+      run: |
+        mkdir -p data
+        rm -f data/test.db
+        sqlite3 data/test.db < data/schema.sql
+        echo "✅ Test database created"
     
     - name: Build project
       run: make
@@ -31,7 +35,6 @@ jobs:
     - name: Run tests with coverage
       run: |
         make clean-coverage
-        make db-test
         gcc -Wall -I./include -fprofile-arcs -ftest-coverage tests/test_auth.c src/auth.c -o bin/test_auth -lsqlite3
         ./bin/test_auth
         gcov src/auth.c
