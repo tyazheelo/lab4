@@ -34,7 +34,7 @@ test-coverage: clean-coverage
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) $(COV_FLAGS) $(TEST_AUTH_SRC) -o $(TEST_AUTH) $(LDFLAGS)
 	./$(TEST_AUTH)
-	gcov -o . $(SRC_DIR)/auth.c
+	gcov *.c
 
 clean:
 	rm -rf $(BIN_DIR)
