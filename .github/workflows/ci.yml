@@ -19,20 +19,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gcc make libsqlite3-dev lcov sqlite3
     
-    - name: Initialize database
-      run: |
-        mkdir -p data
-        rm -f data/test.db
-        sqlite3 data/test.db < data/schema.sql
-    
     - name: Build project
       run: make
     
-    - name: Run tests
-      run: make test-auth
-    
     - name: Run tests with coverage
-      run: make test-coverage
+      run: |
+        rm -f data/test.db
+        sqlite3 data/test.db < data/schema.sql
+        make test-coverage
     
     - name: Generate HTML coverage report
       run: |
@@ -45,3 +39,9 @@ jobs:
       with:
         name: coverage-report
         path: coverage_report/
+    
+    - name: Upload executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: ippodrom-linux
+        path: bin/ippodrom
