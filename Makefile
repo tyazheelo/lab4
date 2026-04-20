@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -I./include
 LDFLAGS = -lsqlite3
+COV_FLAGS = -fprofile-arcs -ftest-coverage
 
 SRC_DIR = src
 TEST_DIR = tests
@@ -29,10 +30,17 @@ $(TEST_AUTH): $(TEST_AUTH_SRC)
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
+test-coverage: clean-coverage
+	mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS) $(COV_FLAGS) $(TEST_AUTH_SRC) -o $(TEST_AUTH) $(LDFLAGS)
+	./$(TEST_AUTH)
+	gcov $(SRC_DIR)/auth.c
+
 clean:
 	rm -rf $(BIN_DIR)
+	rm -f $(DATA_DIR)/test.db
 
 clean-coverage:
 	rm -f *.gcda *.gcno *.gcov
 
-.PHONY: all run test-auth clean clean-coverage
+.PHONY: all run test-auth test-coverage clean clean-coverage

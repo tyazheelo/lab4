@@ -1,6 +1,15 @@
 -- Created by Redgate Data Modeler (https://datamodeler.redgate-platform.com)
 -- Last modification date: 2026-04-19 16:08:31.997
 
+CREATE TABLE USERS (
+    id integer NOT NULL CONSTRAINT USERS_pk PRIMARY KEY,
+    username varchar(50) NOT NULL,
+    password varchar(255) NOT NULL,
+    role varchar(20) NOT NULL,
+    CONSTRAINT USERS_ak_1 UNIQUE (username),
+    CONSTRAINT check_1 CHECK (role IN ('admin', 'jockey', 'owner'))
+);
+
 -- tables
 -- Table: HORSES
 CREATE TABLE HORSES (
@@ -79,14 +88,6 @@ CREATE TABLE RACES_HORSES_JOCKEYS (
 );
 
 -- Table: USERS
-CREATE TABLE USERS (
-    id integer NOT NULL CONSTRAINT USERS_pk PRIMARY KEY,
-    username varchar(50) NOT NULL,
-    password varchar(255) NOT NULL,
-    role varchar(20) NOT NULL,
-    CONSTRAINT USERS_ak_1 UNIQUE (username),
-    CONSTRAINT check_1 CHECK (role IN ('admin', 'jockey', 'owner'))
-);
 
 -- End of file.
 
