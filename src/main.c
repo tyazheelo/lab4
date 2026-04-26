@@ -84,14 +84,12 @@ void admin_manage_horses(void) {
         break;
     }
     case 2: {
-        char nickname[50], owner_name[100];
+        char nickname[50];
         int age, exp_years, owner_id;
         utils_get_string("Nickname: ", nickname, sizeof(nickname));
         age = utils_get_int("Age: ");
         exp_years = utils_get_int("Experience years: ");
-        utils_get_string("Owner last name: ", owner_name, sizeof(owner_name));
-        // Find owner by last name (simplified)
-        owner_id = 1; // Default, should search properly
+        owner_id = utils_get_int("Owner ID: ");
         if (horses_create(db, nickname, age, exp_years, owner_id)) {
             utils_print_success("Horse added successfully");
         }
@@ -129,6 +127,7 @@ void admin_manage_horses(void) {
         utils_print_error("Invalid choice");
     }
 }
+
 
 void admin_manage_races(void) {
     int choice;
