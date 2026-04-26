@@ -71,16 +71,16 @@ int utils_validate_date(const char* date_str) {
     return 1;
 }
 
-char* utils_get_current_date(void) {
+char *utils_get_current_date(void) {
     time_t t = time(NULL);
-    struct tm* tm = localtime(&t);
-
-    char* date_str = malloc(11); // YYYY-MM-DD + null
+    struct tm *tm = localtime(&t);
+    
+    char *date_str = malloc(12); // YYYY-MM-DD + null + safety
     if (!date_str) return NULL;
-
-    snprintf(date_str, 11, "%04d-%02d-%02d",
-        tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday);
-
+    
+    snprintf(date_str, 12, "%04d-%02d-%02d", 
+             tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday);
+    
     return date_str;
 }
 
