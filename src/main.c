@@ -222,8 +222,8 @@ void jockey_view_history(void) {
         utils_print_error("Jockey not found");
         return;
     }
-
-    char** history = NULL;
+    
+    char **history = NULL;
     int count = 0;
     if (jockeys_get_race_history(db, jockey_id, &history, &count)) {
         printf("\n=== My Race History ===\n");
@@ -235,8 +235,7 @@ void jockey_view_history(void) {
             printf("No race history found.\n");
         }
         free(history);
-    }
-    else {
+    } else {
         utils_print_error("Failed to get race history");
     }
 }
