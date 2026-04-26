@@ -3,6 +3,9 @@
 
 #include <sqlite3.h>
 
+// Forward declaration for Horse type
+typedef struct Horse Horse;
+
 // Owner structure
 typedef struct {
     int id;
