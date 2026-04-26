@@ -39,7 +39,7 @@ int owners_get_by_user_id(sqlite3* db, int user_id, Owner* owner);
 int owners_get_all(sqlite3* db, Owner** owners, int* count);
 
 // Get owner with their horses and race results (** for owner role)
-int owners_get_with_horses_and_races(sqlite3* db, int owner_id, char** result, int* count);
+int owners_get_with_horses_and_races(sqlite3* db, int owner_id, char*** result, int* count);
 
 // Get owner horses list (** for owner role)
 int owners_get_horses(sqlite3* db, int owner_id, Horse** horses, int* count);
