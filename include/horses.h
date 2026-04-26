@@ -3,6 +3,9 @@
 
 #include <sqlite3.h>
 
+// Forward declaration for Owner type 
+struct Owner;
+
 // Horse structure
 typedef struct {
     int id;
@@ -10,7 +13,7 @@ typedef struct {
     int age;
     int experience_years;
     int owner_id;
-    char owner_name[100]; // For JOIN queries
+    char owner_name[100];
 } Horse;
 
 // Initialize horses module
