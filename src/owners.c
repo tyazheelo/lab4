@@ -210,20 +210,20 @@ int owners_get_all(sqlite3* db, Owner** owners, int* count) {
     return 1;
 }
 
-int owners_get_with_horses_and_races(sqlite3* db, int owner_id, char** result, int* count) {
+int owners_get_with_horses_and_races(sqlite3 *db, int owner_id, char ***result, int *count) {
     char sql[1024];
     snprintf(sql, sizeof(sql),
-        "SELECT h.nickname, r.race_date, r.race_number, rhj.position "
-        "FROM OWNERS o "
-        "JOIN HORSES h ON o.id = h.owner_id "
-        "LEFT JOIN RACES_HORSES_JOCKEYS rhj ON h.id = rhj.horse_id "
-        "LEFT JOIN RACES r ON rhj.race_id = r.id "
-        "WHERE o.id = %d "
-        "ORDER BY h.nickname, r.race_date;", owner_id);
-
-    sqlite3_stmt* stmt;
+             "SELECT h.nickname, r.race_date, r.race_number, rhj.position "
+             "FROM OWNERS o "
+             "JOIN HORSES h ON o.id = h.owner_id "
+             "LEFT JOIN RACES_HORSES_JOCKEYS rhj ON h.id = rhj.horse_id "
+             "LEFT JOIN RACES r ON rhj.race_id = r.id "
+             "WHERE o.id = %d "
+             "ORDER BY h.nickname, r.race_date;", owner_id);
+    
+    sqlite3_stmt *stmt;
     int row_count = 0;
-
+    
     char count_sql[1024];
     snprintf(count_sql, sizeof(count_sql), "SELECT COUNT(*) FROM (%s);", sql);
     if (sqlite3_prepare_v2(db, count_sql, -1, &stmt, NULL) == SQLITE_OK) {
@@ -232,44 +232,43 @@ int owners_get_with_horses_and_races(sqlite3* db, int owner_id, char** result, i
         }
         sqlite3_finalize(stmt);
     }
-
+    
     if (row_count == 0) {
         *result = NULL;
         *count = 0;
         return 1;
     }
-
+    
     *result = (char**)malloc(sizeof(char*) * row_count);
     if (!*result) return 0;
-
+    
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
         free(*result);
         return 0;
     }
-
+    
     *count = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         char line[512];
-        const char* horse = (const char*)sqlite3_column_text(stmt, 0);
-        const char* date = (const char*)sqlite3_column_text(stmt, 1);
+        const char *horse = (const char*)sqlite3_column_text(stmt, 0);
+        const char *date = (const char*)sqlite3_column_text(stmt, 1);
         int race_num = sqlite3_column_int(stmt, 2);
         int pos = sqlite3_column_int(stmt, 3);
-
+        
         if (date) {
             snprintf(line, sizeof(line), "Horse: %s, Date: %s, Race #%d, Position: %d",
-                horse ? horse : "unknown", date, race_num, pos);
-        }
-        else {
+                     horse ? horse : "unknown", date, race_num, pos);
+        } else {
             snprintf(line, sizeof(line), "Horse: %s (no races yet)", horse ? horse : "unknown");
         }
-
+        
         (*result)[*count] = (char*)malloc(strlen(line) + 1);
         if ((*result)[*count]) {
             strcpy((*result)[*count], line);
         }
         (*count)++;
     }
-
+    
     sqlite3_finalize(stmt);
     return 1;
 }
