@@ -2,9 +2,7 @@
 #define OWNERS_H
 
 #include <sqlite3.h>
-
-// Forward declaration for Horse type
-typedef struct Horse Horse;
+#include "horses.h"  // Include horses.h directly instead of forward declaration
 
 // Owner structure
 typedef struct {
@@ -21,13 +19,15 @@ typedef struct {
 int owners_init(sqlite3* db);
 
 // Create new owner (admin only)
-int owners_create(sqlite3* db, const char* name, const char* last_name, const char* middle_name, const char* address, const char* phone, int user_id);
+int owners_create(sqlite3* db, const char* name, const char* last_name, const char* middle_name,
+    const char* address, const char* phone, int user_id);
 
 // Read owner by ID
 int owners_read(sqlite3* db, int owner_id, Owner* owner);
 
 // Update owner (admin only)
-int owners_update(sqlite3* db, int owner_id, const char* name, const char* last_name, const char* middle_name, const char* address, const char* phone);
+int owners_update(sqlite3* db, int owner_id, const char* name, const char* last_name,
+    const char* middle_name, const char* address, const char* phone);
 
 // Delete owner (admin only)
 int owners_delete(sqlite3* db, int owner_id);
