@@ -343,18 +343,18 @@ int races_distribute_prize(sqlite3* db, int race_id, double prize_fund) {
     return 1;
 }
 
-int races_get_all_with_details(sqlite3* db, char** report, int* count) {
-    const char* sql =
+int races_get_all_with_details(sqlite3 *db, char ***report, int *count) {
+    const char *sql = 
         "SELECT r.id, r.race_date, r.race_number, r.prize_fund, "
         "COUNT(DISTINCT rhj.horse_id) as participants "
         "FROM RACES r "
         "LEFT JOIN RACES_HORSES_JOCKEYS rhj ON r.id = rhj.race_id "
         "GROUP BY r.id "
         "ORDER BY r.race_date DESC;";
-
-    sqlite3_stmt* stmt;
+    
+    sqlite3_stmt *stmt;
     int row_count = 0;
-
+    
     char count_sql[512];
     snprintf(count_sql, sizeof(count_sql), "SELECT COUNT(*) FROM (%s);", sql);
     if (sqlite3_prepare_v2(db, count_sql, -1, &stmt, NULL) == SQLITE_OK) {
@@ -363,40 +363,39 @@ int races_get_all_with_details(sqlite3* db, char** report, int* count) {
         }
         sqlite3_finalize(stmt);
     }
-
+    
     if (row_count == 0) {
         *report = NULL;
         *count = 0;
         return 1;
     }
-
+    
     *report = (char**)malloc(sizeof(char*) * row_count);
     if (!*report) return 0;
-
+    
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
         free(*report);
         return 0;
     }
-
+    
     *count = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         char line[512];
-        int race_id = sqlite3_column_int(stmt, 0);
-        const char* date = (const char*)sqlite3_column_text(stmt, 1);
+        const char *date = (const char*)sqlite3_column_text(stmt, 1);
         int race_num = sqlite3_column_int(stmt, 2);
         double prize = sqlite3_column_double(stmt, 3);
         int participants = sqlite3_column_int(stmt, 4);
-
+        
         snprintf(line, sizeof(line), "Race #%d: Date=%s, Prize=%.2f, Participants=%d",
-            race_num, date ? date : "unknown", prize, participants);
-
+                 race_num, date ? date : "unknown", prize, participants);
+        
         (*report)[*count] = (char*)malloc(strlen(line) + 1);
         if ((*report)[*count]) {
             strcpy((*report)[*count], line);
         }
         (*count)++;
     }
-
+    
     sqlite3_finalize(stmt);
     return 1;
 }
