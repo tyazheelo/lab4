@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -I./include
-LDFLAGS = -lsqlite3
+CFLAGS = -Wall -I./include -Wno-format-truncation
+LDFLAGS = -lsqlite3 -lm
 
 SRC = $(wildcard src/*.c)
 TARGET = bin/ippodrom
