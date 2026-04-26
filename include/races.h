@@ -60,7 +60,7 @@ int races_distribute_prize(sqlite3* db, int race_id, double prize_fund);
 // Get all races with details (for reports)
 int races_get_all_with_details(sqlite3* db, char*** report, int* count);
 
-// Check if horse and jockey exist before inserting (trigger function in C)
+// Check if horse and jockey exist before inserting
 int races_validate_participants(sqlite3* db, int horse_id, int jockey_id);
 
 // Free allocated races array
