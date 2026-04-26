@@ -38,7 +38,7 @@ int jockeys_get_all(sqlite3* db, Jockey** jockeys, int* count);
 int jockeys_get_most_participations(sqlite3* db, Jockey* jockey, int* participation_count);
 
 // Get jockey race history (* for jockey role)
-int jockeys_get_race_history(sqlite3* db, int jockey_id, char** history, int* count);
+int jockeys_get_race_history(sqlite3* db, int jockey_id, char*** history, int* count);
 
 // Get jockey statistics (total races, wins, top3 finishes)
 int jockeys_get_stats(sqlite3* db, int jockey_id, int* total_races, int* wins, int* top3);
